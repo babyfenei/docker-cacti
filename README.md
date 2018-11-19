@@ -25,7 +25,7 @@
 
 9. Increase cacti according to the value of Base_value (1000 or 1024), calculate the flow graph according to 1000 or 1024, including 95 value and bandwidth total.
 
-10.Thold plug-in has integrated the enterprise WeChat alarm function, you only need to set the relevant ID and secret in the settings to use. Please set your own WeChat specific setting method.
+10. Thold plug-in has integrated the enterprise WeChat alarm function, you only need to set the relevant ID and secret in the settings to use. Please set your own WeChat specific setting method.
 
 ---
 
@@ -83,7 +83,7 @@ Example:
     --env="DB_PORT=3306 \
     --env="DB_USER=cactiuser" \
     --env="DB_PASSWORD=cactiuser" \
-    --env=" TIMEZONE=Asia/Shanghai" \
+    --env="TIMEZONE=Asia/Shanghai" \
     --env="RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei" \
     --env="INITIALIZE_DB=0" \
     -v '/data/cacti':'/var/www':'rw' \
