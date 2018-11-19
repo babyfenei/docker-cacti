@@ -1,52 +1,101 @@
-
-#### 功能介绍
-1.本脚本自动安装cacti0.8.8h版本
-
-2.自动安装cacti0.8.8h、rrdtool1.4.9、spine0.8.8h到系统
-
-3.本脚本运行在centos6.5-6.8下
-
-4.本脚本自动添加中文微软雅黑字体到centos系统中,rrdtool及cacti默认支持中文
-
-5.本脚本开头有自定义rrdtool水印变量,可根据需求更改
-
-6.本脚本自动添加图形导出脚本,自动按照日期每日、每天导出图形树内所有图形和数据
-
-7.本脚本自动添加数据库备份脚本
-
-8.本脚本自动下载目前已验证可以正常使用的cacti0.8.8h版本下的插件
-
-9.本脚本自动更改graph_xport.php文件编码,解决中文标题图形导出数据的乱码问题
-
-10.本脚本自动修改某些常用settings设置项
-
-11.本脚本自动安装cacti后需监控cacti本地服务器的,需修改device中localhost的snmp监控方式才可正常监控
-
-12.本脚本增加cacti按照Base_value的值(1000或1024),对流量图按照1000或者1024进行计算，包括95值和带宽总计。
+﻿﻿# Cacti 0.8.8h Docker Container
+---
  
+[![](https://images.microbadger.com/badges/image/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own image badge on microbadger.com")
+
+##### Github Repo: https://github.com/babyfenei/docker-cacti
+##### Dockerhub Repo: https://hub.docker.com/r/babyfenei/cacti-0.8.8h/
+
+## Features
+1. This docker is based on centos 6.8 version, installed cacti0.8.8h, rrdtool1.4.9, spine0.8.8h to the system
+
+2. Automatically add Chinese Microsoft Yahoo font to centos system, rrdtool and cacti support Chinese by default
+
+3. Customizable rrdtool watermark variable, which can be modified in the variable RRDTOOL_LOGO
+
+4. Automatically add graphic export scripts to automatically export all graphics and data in the graph tree daily and daily according to the date. Export data is saved in the /var/www/export directory
+
+5. Automatically add data backup script, backup data is saved in /var/www/backup directory
+
+6. Added part of the plugin under cacti0.8.8h,including Realtime, Clog, Syslog, Monitor, Nectar, Thold, Watermark, Settings, Cycle, etc.
+
+7. The graph_xport.php file encoding has been changed to solve the garbled problem of the Chinese header graphic export data.
+
+8. Some common settings settings have been modified
+
+9. Increase cacti according to the value of Base_value (1000 or 1024), calculate the flow graph according to 1000 or 1024, including 95 value and bandwidth total.
+
+10.Thold plug-in has integrated the enterprise WeChat alarm function, you only need to set the relevant ID and secret in the settings to use. Please set your own WeChat specific setting method.
+
 ---
 
-#### 使用方法 ###
+## Using this image
+### Running the container
+This container contains Cacti v1+ and is not compatible with older version of cacti. It does rely on an external MySQL database that can be already configured before initial startup or having the container itself perform the setup and initialization. If you want this container to perform these steps for you, you will need to pass the root password for mysql login or startup will fail. This container automatically incorporates Cacti Spine's multithreaded poller.
 
-```git clone https://github.com/babyfenei/cacti-autoinstall-centos6-0.8.8h.git```
+### Exposed Ports
+The following ports are important and used by Cacti
 
-```cd cacti-autoinstall-centos6-0.8.8h && bash start.sh```
+| Port |     Notes     |  
+|------|:-------------:|
+|  80  | HTTP GUI Port |
+|  514 | SYSLOG   Port |
 
----
+It is recommended to allow at least one of the above ports for access to the monitoring system. This is translated by the -p hook. For example
 
-#### 示例图片
 
-![cacti_backup_export](/container-files/pic/cacti_console.png)
-![cacti_plugin_management](/container-files/pic/cacti_plugin_management.png)
-![cacti_settings](/container-files/pic/cacti_settings.png)
-![cacti_thold](/container-files/pic/cacti_thold.png)
-![cacti_graph](/container-files/pic/cacti_graph.png)
-![cacti_syslog_viewer](/container-files/pic/cacti_syslog_viewer.png)
-![cacti_backup_export](/container-files/pic/cacti_backup_export.png)
-![cacti_export](/container-files/pic/cacti_export.png)
-![rrdtool_logo](/container-files/pic/rrdtool_logo.png)
-![thold_wechat](/container-files/pic/thold_wechat.png)
-![cacti_1024](/container-files/pic/cacti_1024.png)
+
+### Database deployment
+To be able to connect to database we would need one to be running first. Easiest way to do that is to use another docker image. For this purpose we will use our [million12/mariadb](https://registry.hub.docker.com/u/million12/mariadb/) image as our database.
+
+**For more information about million12/MariaDB see our [documentation.](https://github.com/million12/docker-mariadb) **
+
+Example:  
+
+    docker run \
+    -d \
+    --name cacti-db \
+    -p 3306:3306 \
+    --env="MARIADB_USER=cactiuser" \
+    --env="MARIADB_PASS=my_password" \
+    million12/mariadb
+
+***Remember to use the same credentials when deploying cacti image.***
+### Environmental Variable
+In this Image you can use environmental variables to connect into external MySQL/MariaDB database.
+
+`DB_USER` = database user  
+`DB_PASS` = database password  
+`DB_ADDRESS` = database address (either ip or domain-name)  
+`TIMEZONE` = timezone  
+
+### Cacti Deployment
+Now when we have our database running we can deploy cacti image with appropriate environmental variables set.
+
+Example:  
+
+    docker run \
+    -d \
+    --name cacti \
+    -p 80:80 \
+    -p 514:514 \
+    --env="DB_HOST=localhost" \
+    --env="DB_PORT=3306 \
+    --env="DB_USER=cactiuser" \
+    --env="DB_PASSWORD=cactiuser" \
+    --env=" TIMEZONE=Asia/Shanghai" \
+    --env="RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei" \
+    --env="INITIALIZE_DB=0" \
+    -v '/data/cacti':'/var/www':'rw' \
+    babyfenei/cacti-0.8.8h
+
+### Access Cacti web interface
+To log in into cacti for the first time use credentials `admin:admin`. System will ask you to change those when logged in for the firts time.
+
+
+
+
+
 
 
 

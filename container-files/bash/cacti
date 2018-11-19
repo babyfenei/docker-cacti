@@ -1,0 +1,4 @@
+*/5     *       *       *       *       root /usr/bin/php /var/www/html/poller.php > /dev/null 2>&1
+01      00      *   	*   	*   	root /var/www/bash/backup.sh > /dev/null 2>&1
+01      00      *       *       *   	root /var/www/bash/export.sh > /dev/null 2>&1
+*/5     *       *       *       *       root /usr/sbin/ntpdate time.windows.com > /dev/null 2>&1
