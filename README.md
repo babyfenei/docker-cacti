@@ -31,7 +31,7 @@
 
 ## Using this image
 ### Running the container
-This container contains Cacti v1+ and is not compatible with older version of cacti. It does rely on an external MySQL database that can be already configured before initial startup or having the container itself perform the setup and initialization. If you want this container to perform these steps for you, you will need to pass the root password for mysql login or startup will fail. This container automatically incorporates Cacti Spine's multithreaded poller.
+This docker image is based on cacti0.8.8h. It does not have a database by default. You must use an external mysql database or a mysql database docker image. The database docker image I used in the test environment is million12/mariadb, but this database image cannot modify the time zone. You can also use other mysql images, preferably you can modify the time zone.
 
 ### Exposed Ports
 The following ports are important and used by Cacti
