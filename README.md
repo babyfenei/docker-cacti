@@ -61,7 +61,8 @@ Example:
     million12/mariadb
 
 ***Remember to use the same credentials when deploying cacti image.***
-### Environmental Variable
+
+### Environmental Variable Mysql
 In this Image you can use environmental variables to connect into external MySQL/MariaDB database.
 
 `DB_USER` = database user  
@@ -89,13 +90,22 @@ Example:
     -v '/data/cacti':'/var/www':'rw' \
     babyfenei/cacti-0.8.8h
 
+
+### Environmental Variable cacti
+In this Image you can use environmental variables to connect into external MySQL/MariaDB database.
+
+ 
+`DB_HOST` = localhost (Remote database connection address, using IP or domain name)
+`DB_PORT` = 3306  (Remote database connection port)    
+`DB_USER = cactiuser  (Remote database username)
+`DB_PASSWORD` = cactiuser    (Remote database password)
+`TIMEZONE` = Asia/Shanghai    (Cacti server time zone, viewable in /usr/share/zoneinfo)
+`RRDTOOL_LOGO` = CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei    (Rrdtool logo, you can modify the watermark on the right side of cacti graphics, be careful not to enter #)
+`INITIALIZE_DB` = 0    (Initialize the database switch, 1 is initialization, 0 is not, the default is 0. Only valid when the cacti database is detected)
+
 ### Access Cacti web interface
 To log in into cacti for the first time use credentials `admin:admin`. System will ask you to change those when logged in for the firts time.
 
-
-
-
-
-
-
+### Notice
+If realtime has graphics and data, but the graphics list has no data, please use `select * from cacti.poller_time;` in the mysql database to query the poller time. If the time does not match the cacti server time, you need to modify the mysql database server. Time or use `set time_zone = '${mysql_zone}';`Modify database time
 
