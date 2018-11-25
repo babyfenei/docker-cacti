@@ -110,7 +110,7 @@ In this Image you can use environmental variables to connect into external MySQL
 
 ### VOLUME: Mount directory description
 |File directory| description|
-|:---:|:---:|
+|:---:|---|
 |/var/www/html | cacti master files.|
 |/var/www/backups| cacti backup file, daily backup, default data backup file within 7 days.|
 |/var/www/export | cacti graphics data export file, automatically export graphics in the number of graphics, including graphics and raw data. The daily flow chart is exported daily, and the monthly monthly flow chart is exported monthly. You can also use English () after the graphic name to define the monthly traffic export date in parentheses.|
