@@ -1,7 +1,7 @@
 ﻿﻿﻿# Cacti 0.8.8h Docker Container
 ---
  
-[![](https://images.microbadger.com/badges/image/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/version/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own version badge on microbadger.com")  [![](https://images.microbadger.com/badges/license/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own license badge on microbadger.com")
 
 ##### Github Repo: https://github.com/babyfenei/docker-cacti
 ##### Dockerhub Repo: https://hub.docker.com/r/babyfenei/cacti-0.8.8h/
