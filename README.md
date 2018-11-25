@@ -88,7 +88,9 @@ Example:
     --env="TIMEZONE=Asia/Shanghai" \
     --env="RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei" \
     --env="INITIALIZE_DB=0" \
-    -v '/data/cacti':'/var/www':'rw' \
+    -v '/data/cacti/html':'/var/www/html':'rw' \
+    -v '/data/cacti/backups':'/var/www/backups':'rw' \
+    -v '/data/cacti/export':'/var/www/export':'rw' \
     babyfenei/cacti-0.8.8h
 
 
@@ -104,6 +106,14 @@ In this Image you can use environmental variables to connect into external MySQL
 |TIMEZONE|Asia/Shanghai|Cacti server time zone, viewable in /usr/share/zoneinfo|
 |RRDTOOL_LOGO|CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei|Rrdtool logo, you can modify the watermark on the right side of cacti graphics, be careful not to enter #|
 |INITIALIZE_DB|0|Initialize the database switch, 1 is initialization, 0 is not, the default is 0. Only valid when the cacti database is detected|
+
+
+### VOLUME: Mount directory description
+|File directory| description|
+|:---:|:---:|
+|/var/www/html | cacti master files.|
+|/var/www/backups| cacti backup file, daily backup, default data backup file within 7 days.|
+|/var/www/export | cacti graphics data export file, automatically export graphics in the number of graphics, including graphics and raw data. The daily flow chart is exported daily, and the monthly monthly flow chart is exported monthly. You can also use English () after the graphic name to define the monthly traffic export date in parentheses.|
 
 ### Access Cacti web interface
 To log in into cacti for the first time use credentials `admin:admin`. System will ask you to change those when logged in for the firts time.

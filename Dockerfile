@@ -30,7 +30,9 @@ ENV DB_USER=cactiuser \
     RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei \
     INITIALIZE_DB=0 
 
-VOLUME ["/var/www"]
+VOLUME ["/var/www/html"]
+VOLUME ["/var/www/backups"]
+VOLUME ["/var/www/export"]
 
 COPY container-files / 
 
