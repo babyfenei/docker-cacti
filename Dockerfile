@@ -2,6 +2,11 @@ FROM centos:6.8
 
 MAINTAINER Fenei <babyfenei@qq.com>
 
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG VERSION
+LABEL build_version="babyfenei/cacti-0.8.8h version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+
 ### 安装依赖
 RUN \
     mkdir -p /data/logs/ && \
@@ -24,6 +29,7 @@ ENV DB_USER=cactiuser \
     TIMEZONE=Asia/Shanghai \
     RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei \
     INITIALIZE_DB=0 
+
 VOLUME ["/var/www"]
 
 COPY container-files / 
@@ -32,5 +38,5 @@ EXPOSE 80 514
 
 COPY start.sh /start.sh
 
-CMD ["/start.sh"]
 
+CMD [ "bash", "/start.sh" ]
