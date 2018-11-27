@@ -104,7 +104,7 @@ In this Image you can use environmental variables to connect into external MySQL
 |DB_USER|cactiuser|Remote database username|
 |DB_PASSWORD|cactiuser|Remote database password|
 |TIMEZONE|Asia/Shanghai|Cacti server time zone, viewable in /usr/share/zoneinfo|
-|RRDTOOL_LOGO|CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei|Rrdtool logo, you can modify the watermark on the right side of cacti graphics, be careful not to enter #|
+|RRDTOOL_LOGO|DOCKER-CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei|Rrdtool logo, you can modify the watermark on the right side of cacti graphics, be careful not to enter #|
 |INITIALIZE_DB|0|Initialize the database switch, 1 is initialization, 0 is not, the default is 0. Only valid when the cacti database is detected|
 
 

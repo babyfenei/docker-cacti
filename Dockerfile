@@ -27,7 +27,7 @@ ENV DB_USER=cactiuser \
     DB_HOST=localhost \
     DB_PORT=3306 \
     TIMEZONE=Asia/Shanghai \
-    RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei \
+    RRDTOOL_LOGO=DOCKER-CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei \
     INITIALIZE_DB=0 
 
 VOLUME ["/var/www/html"]
@@ -39,6 +39,5 @@ COPY container-files /
 EXPOSE 80 514
 
 COPY start.sh /start.sh
-
 
 CMD [ "bash", "/start.sh" ]

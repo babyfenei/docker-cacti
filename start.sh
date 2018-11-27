@@ -64,8 +64,13 @@ if [ ! -f /var/www/html/install.lock ]; then
 	\cp -rf /bash/backup.sh /var/www/bash/backup.sh && chmod +x /var/www/bash/backup.sh
 	chown -R apache:apache /var/www
     
-    echo "$(date +%F_%R) [New Install] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."
-    while true 
+else
+    echo "$(date +%F_%R) [Note] cacti has installed in this server."
+fi
+
+
+echo "$(date +%F_%R) [New Install] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."
+while true 
 	sleep 3
 	do
 		echo "$(date +%F_%R) [New Install] nmap ${DB_HOST} -p ${DB_PORT}"  
@@ -77,19 +82,18 @@ if [ ! -f /var/www/html/install.lock ]; then
 		fi
 	done		
 	#while ! timeout 1 bash -c 'cat < /dev/null > /dev/tcp/${DB_HOST}/${DB_PORT}'; do sleep 3; done
-    echo "$(date +%F_%R) [New Install] Database is up! - configuring DB located at ${DB_HOST}:${DB_PORT} (this can take a few minutes)."
-
-    # if docker was told to setup the database then perform the following
-    if [ ${INITIALIZE_DB} = 1 ]; then
+echo "$(date +%F_%R) [New Install] Database is up! - configuring DB located at ${DB_HOST}:${DB_PORT} (this can take a few minutes)."
+# if docker was told to setup the database then perform the following
+if [ ${INITIALIZE_DB} = 1 ]; then
         echo "$(date +%F_%R) [Database Initialize] The database cacti will be deleted;"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "drop database cacti;"
         echo "$(date +%F_%R) [Database Initialize] The database syslog will be deleted;"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "drop database syslog;"
-    fi
-	
-    if [[ $(mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "show databases" | grep cacti) != "cacti" ]]; then    
-    echo "$(date +%F_%R) [New Install] Container has been instructed to create new Database on remote system."
-        mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set time_zone = '${mysql_zone}';"
+fi
+
+if [[ $(mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "show databases" | grep cacti) != "cacti" ]]; then    
+	echo "$(date +%F_%R) [New Install] Container has been instructed to create new Database on remote system."
+	mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set time_zone = '${mysql_zone}';"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set global time_zone = '${mysql_zone}';"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set collation_server = utf8mb4_unicode_ci;"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set character_set_client = utf8mb4;"
@@ -107,12 +111,12 @@ if [ ! -f /var/www/html/install.lock ]; then
         echo "$(date +%F_%R) [New Install] GRANT SELECT ON mysql.time_zone_name TO '${DB_USER}' IDENTIFIED BY '${DB_PASSWORD}';"
 	mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "GRANT SELECT ON mysql.time_zone_name TO '${DB_USER}' IDENTIFIED BY '${DB_PASS}';"
   
-    # fresh install db merge
-    echo "$(date +%F_%R) [New Install] Merging vanilla cacti.sql file to database."
+    	# fresh install db merge
+	echo "$(date +%F_%R) [New Install] Merging vanilla cacti.sql file to database."
 	mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} cacti < /var/www/html/cacti.sql
 
-    # install additional settings
-    echo "$(date +%F_%R) [New Install] Modify some settings!"
+        # install additional settings
+    	echo "$(date +%F_%R) [New Install] Modify some settings!"
 	mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "INSERT INTO cacti.settings (name, value) VALUES ('font_method', '0');"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "INSERT INTO cacti.settings (name, value) VALUES ('max_title_data_source', '150');"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "INSERT INTO cacti.settings (name, value) VALUES ('poller_type', '2');"
@@ -128,32 +132,31 @@ if [ ! -f /var/www/html/install.lock ]; then
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "INSERT INTO cacti.settings (name, value) VALUES ('automation_graphs_enabled', 'on');"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "INSERT INTO cacti.settings (name, value) VALUES ('realtime_cache_path', '/var/www/html/cache/');"
         mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "REPLACE INTO cacti.settings SET name='path_spine', value='/usr/local/spine/bin/spine';"
-    else
+else
         echo "$(date +%F_%R) [Note] Database cacti has exits"
                 
-    fi 
+fi 
 
-    # install additional templates
-    echo "$(date +%F_%R) [New Install] Installing supporting template files."
-    for filename in /var/www/html/templates/*.xml; do
+# install additional templates
+echo "$(date +%F_%R) [New Install] Installing supporting template files."
+for filename in /var/www/html/templates/*.xml; do
 	echo "$(date +%F_%R) [New Install] Installing template file $filename"
-	    php -q /var/www/html/cli/import_template.php --filename=$filename --with-template-rras > /dev/null
-	done
+	php -q /var/www/html/cli/import_template.php --filename=$filename --with-template-rras > /dev/null
+done
 
-    # CLEANUP
-    echo "$(date +%F_%R) [New Install] Removing temp Cacti and Spine installation files."
-    rm -rf /bash
-    rm -rf /packages
+# CLEANUP
+echo "$(date +%F_%R) [New Install] Removing temp Cacti and Spine installation files."
+rm -rf /bash
+rm -rf /packages
 
-    # create lock file so this is not re-ran on restart
-    touch /var/www/html/install.lock
-    echo "$(date +%F_%R) [New Install] Creating lock file, db setup complete."
-else
-    echo "$(date +%F_%R) [Note] cacti has installed in this server."
-fi
-    # correcting file permissions
-    echo "$(date +%F_%R) [Note] Setting cacti file permissions."
-    chown -R apache.apache /var/www/
+# create lock file so this is not re-ran on restart
+touch /var/www/html/install.lock
+echo "$(date +%F_%R) [New Install] Creating lock file, db setup complete."
+    
+
+# correcting file permissions
+echo "$(date +%F_%R) [Note] Setting cacti file permissions."
+chown -R apache.apache /var/www/
 
 
 echo "$(date +%F_%R) [Note] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."

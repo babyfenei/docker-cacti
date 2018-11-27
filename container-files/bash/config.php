@@ -38,7 +38,7 @@ $database_ssl = false;
    would be set to /cacti/
 */
 
-$url_path = '/cacti/';
+$url_path = '/';
 
 /* default session name - session name must contain alpha characters */
 
