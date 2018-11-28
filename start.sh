@@ -20,7 +20,7 @@ if [ ! -f /var/www/html/install.lock ]; then
         #Modify watermark transparency
         sed -i "s/water_color.alpha = 0.3;/water_color.alpha = 0.5;/g" src/rrd_graph.c
      	./configure --prefix=/usr/local/rrdtool  > /var/log/build.log 2>&1 && make > /var/log/build.log 2>&1 && make install > /var/log/build.log 2>&1 
-    	ln -s /usr/local/rrdtool/bin/rrdtool /bin/rrdtool
+    	ln -s /usr/local/rrdtool/bin/rrdtool /usr/bin/rrdtool
     	rm -rf /rrdtool
 
     # CACTI BASE INSTALL
