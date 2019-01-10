@@ -7,10 +7,10 @@ mysql_zone=`echo ${linux_zone:0:3}:${linux_zone:3}`
 echo "$(date +%F_%R) [New Install] The time zone of MySQL will be set to ${mysql_zone}."
 
 # verify if initial install steps are required, if lock file does not exist run the following   
-if [ ! -f /var/www/html/install.lock ]; then
-    echo "$(date +%F_%R) [New Install] Lock file does not exist - new install."
 
     # THIS WAS IN DOCKER-FILE
+if [ ! -f /usr/local/rrdtool/bin/rrdtool ]; then
+    echo "$(date +%F_%R) [New Install] rrdtool does not exist - new install."
     # RRDTOOL BASE INSTALL
     echo "$(date +%F_%R) [New Install] Extracting and installing RRDTOOL files"
 	mkdir -p /rrdtool
@@ -23,13 +23,11 @@ if [ ! -f /var/www/html/install.lock ]; then
     	ln -s /usr/local/rrdtool/bin/rrdtool /usr/bin/rrdtool
     	rm -rf /rrdtool
 
-    # CACTI BASE INSTALL
-    echo "$(date +%F_%R) [New Install] Extracting and installing Cacti files to /var/www/html/"
-	mkdir -p /cacti
-	tar xf /packages/cacti/cacti*.tar.gz -C /cacti --strip-components=1
-   	 \cp -rf  /cacti/* /var/www/html/
-    	rm -rf /packages/cacti/cacti*.tar.gz
+fi
+
 	
+if [ ! -f /usr/local/spine/bin/spine ]; then
+    echo "$(date +%F_%R) [New Install] spine does not exist - new install."
     # SPINE BASE INSTALL
     echo "$(date +%F_%R) [New Install] Extracting and installing Spine files"
 	mkdir -p /spine
@@ -38,9 +36,19 @@ if [ ! -f /var/www/html/install.lock ]; then
     	ln -s /usr/local/spine/bin/spine /usr/bin/spine
     	\cp -rf /usr/local/spine/etc/spine.conf.dist /etc/spine.conf
     	rm -rf /spine 
+fi
 
+if [ ! -f /var/www/html/install.lock ]; then
+    echo "$(date +%F_%R) [New Install] Lock file does not exist - new install."
+    # CACTI BASE INSTALL
+    echo "$(date +%F_%R) [New Install] Extracting and installing Cacti files to /var/www/html/"
+	mkdir -p /cacti
+	tar xf /packages/cacti/cacti*.tar.gz -C /cacti --strip-components=1
+   	 \cp -rf  /cacti/* /var/www/html/
+    	rm -rf /packages/cacti/cacti*.tar.gz
+ 
 
-    # BASE CONFIGS
+   # BASE CONFIGS
     echo "$(date +%F_%R) [New Install] Copying templated configurations to Spine, Apache, and Cacti."
 	source /etc/sysconfig/i18n
 	sed -i "s/DB_HOST/$DB_HOST/g"  `grep -rl DB_HOST  /bash/*`
