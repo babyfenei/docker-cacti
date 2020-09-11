@@ -1,0 +1,40 @@
+version: '2'
+services:
+
+
+  cacti:
+    image: "babyfenei/cacti-0.8.8h"
+    container_name: cacti
+    hostname: cacti
+    ports:
+      - "80:80"
+      - "443:443"
+      - "514:514"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=cactiuser
+      - DB_PASSWORD=cactiuser
+      - TIMEZONE=Asia/Shanghai
+      - RRDTOOL_LOGO=CACTI0.8.8h/RRDTOOL1.4.9-BY:Fenei
+      - INITIALIZE_DB=0  
+    volumes:
+      - /data/cacti/html:/var/www/html
+      - /data/cacti/backups:/var/www/backups
+      - /data/cacti/export:/var/www/export
+    links:
+      - db
+
+
+  db:
+    image: "million12/mariadb"
+    container_name: cacti_db
+    hostname: db
+    ports:
+      - "3306:3306"
+    environment:
+      - MARIADB_USER=cactiuser
+      - MARIADB_PASS=cactiuser
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/cacti/mysql:/var/lib/mysql
