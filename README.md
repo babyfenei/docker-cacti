@@ -30,6 +30,15 @@
 ---
 
 ## Using this image
+### docker-compose
+```
+ wget --no-check-certificate  https://raw.githubusercontent.com/babyfenei/docker-cacti/master/docker-compose.yml
+ ```
+ ```
+ docker-compose up -d
+ ```
+
+
 ### Running the container
 This docker image is based on cacti0.8.8h. It does not have a database by default. You must use an external mysql database or a mysql database docker image. The database docker image I used in the test environment is million12/mariadb, but this database image cannot modify the time zone. You can also use other mysql images, preferably you can modify the time zone.
 
@@ -121,4 +130,7 @@ To log in into cacti for the first time use credentials `admin:admin`. System wi
 ### Notice
 If realtime has graphics and data, but the graphics list has no data, please use `select * from cacti.poller_time;` in the mysql database to query the poller time. If the time does not match the cacti server time, you need to modify the mysql database server. Time or use `set time_zone = '${mysql_zone}';`Modify database time
 
-
+### 
+->![cacti-1](./container-files/images/cacti-1.png)<
+->![cacti-2](./container-files/images/cacti-2.png)<
+->![cacti-2](./container-files/images/cacti-3.png)<
