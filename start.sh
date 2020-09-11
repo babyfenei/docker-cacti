@@ -38,6 +38,7 @@ if [ ! -f /usr/local/spine/bin/spine ]; then
     	rm -rf /spine 
 fi
 
+
 if [ ! -f /var/www/html/install.lock ]; then
     echo "$(date +%F_%R) [New Install] Lock file does not exist - new install."
     # CACTI BASE INSTALL
@@ -70,23 +71,37 @@ if [ ! -f /var/www/html/install.lock ]; then
 	mkdir -p /var/www/bash/
 	\cp -rf /bash/export.sh /var/www/bash/export.sh && chmod +x /var/www/bash/export.sh
 	\cp -rf /bash/backup.sh /var/www/bash/backup.sh && chmod +x /var/www/bash/backup.sh
-	chown -R apache:apache /var/www
+	# correcting file permissions
+	echo "$(date +%F_%R) [New Install] Setting cacti file permissions."
+	chown -R apache.apache /var/www/
+	
+	# install additional templates
+	echo "$(date +%F_%R) [New Install] Installing supporting template files."
+	for filename in /var/www/html/templates/*.xml; do
+		echo "$(date +%F_%R) [New Install] Installing template file $filename"
+		php -q /var/www/html/cli/import_template.php --filename=$filename --with-template-rras > /dev/null
+	done
+	# CLEANUP
+	echo "$(date +%F_%R) [New Install] Removing temp Cacti and Spine installation files."
+	rm -rf /bash
+	rm -rf /packages
     
 else
     echo "$(date +%F_%R) [Note] cacti has installed in this server."
 fi
 
+	
 
-echo "$(date +%F_%R) [New Install] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."
+echo "$(date +%F_%R) [NOTE] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."
 while true 
 	sleep 3
 	do
-		echo "$(date +%F_%R) [New Install] nmap ${DB_HOST} -p ${DB_PORT}"  
+		echo "$(date +%F_%R) [NOTE] nmap ${DB_HOST} -p ${DB_PORT}"  
 		if [[ ! -z `nmap ${DB_HOST} -p ${DB_PORT} |grep "open"` ]];then
-       			echo "$(date +%F_%R) [New Install] The database connect successfuly"
+       			echo "$(date +%F_%R) [NOTE] The database connect successfuly"
 			break
 		else
-       			echo "$(date +%F_%R) [New Install] The database cannot connect retry"
+       			echo "$(date +%F_%R) [waring] The database cannot connect retry"
 		fi
 	done		
 	#while ! timeout 1 bash -c 'cat < /dev/null > /dev/tcp/${DB_HOST}/${DB_PORT}'; do sleep 3; done
@@ -145,43 +160,19 @@ else
                 
 fi 
 
-# install additional templates
-echo "$(date +%F_%R) [New Install] Installing supporting template files."
-for filename in /var/www/html/templates/*.xml; do
-	echo "$(date +%F_%R) [New Install] Installing template file $filename"
-	php -q /var/www/html/cli/import_template.php --filename=$filename --with-template-rras > /dev/null
-done
 
-# CLEANUP
-echo "$(date +%F_%R) [New Install] Removing temp Cacti and Spine installation files."
-rm -rf /bash
-rm -rf /packages
 
 # create lock file so this is not re-ran on restart
 touch /var/www/html/install.lock
 echo "$(date +%F_%R) [New Install] Creating lock file, db setup complete."
     
 
-# correcting file permissions
-echo "$(date +%F_%R) [Note] Setting cacti file permissions."
-chown -R apache.apache /var/www/
 
-
-echo "$(date +%F_%R) [Note] Waiting for database to respond, if this hangs please check MySQL connections are allowed and functional."
-    while true 
-	sleep 3
-	do
-		echo "$(date +%F_%R) [Note] nmap ${DB_HOST} -p ${DB_PORT}"  
-		if [[ ! -z `nmap ${DB_HOST} -p ${DB_PORT} |grep "open"` ]];then
-       			echo "$(date +%F_%R) [Note] The database connect successfuly"
-			echo "$(date +%F_%R) [Note] Setting database time zone."
-			mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set time_zone = '${mysql_zone}';"
-			mysql  -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASSWORD} -e "set global time_zone = '${mysql_zone}';"
-			break
-		else
-       			echo "$(date +%F_%R) [Note] The database cannot connect retry"
-		fi
-	done		
+pkill httpd
+pkill crond
+pkill snmpd
+pkill rsyslogd
+rm -rf /var/run/httpd/*
 
 # start cron service
 echo "$(date +%F_%R) [Note] Starting crond service."
@@ -199,4 +190,5 @@ rsyslogd -f /etc/rsyslog.conf &
 # start web service
 echo "$(date +%F_%R) [Note] Starting httpd service."
 httpd -DFOREGROUND
+
 
