@@ -36,7 +36,7 @@ VOLUME ["/var/www/export"]
 
 COPY container-files / 
 
-EXPOSE 80 514
+EXPOSE 80 514 443
 
 COPY start.sh /start.sh
 
