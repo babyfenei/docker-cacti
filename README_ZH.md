@@ -4,6 +4,7 @@
 [![](https://images.microbadger.com/badges/image/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/version/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own version badge on microbadger.com")  [![](https://images.microbadger.com/badges/license/babyfenei/cacti-0.8.8h.svg)](https://microbadger.com/images/babyfenei/cacti-0.8.8h "Get your own license badge on microbadger.com")
 
 ##### Github Repo: https://github.com/babyfenei/docker-cacti
+##### Gitee  Repo: https://gitee.com/fenei/docker-cacti/
 ##### Dockerhub Repo: https://hub.docker.com/r/babyfenei/cacti-0.8.8h/
 ---
 [README](README.md) | [中文文档](README_ZH.md)
@@ -11,23 +12,23 @@
 ---
 
 ## 特征
-1. 此docker基于centos 6.8版本，已将cacti-0.8.8h，rrdtool-1.4.9，spine-0.8.8h
+1. 此docker容器基于centos 6.8版本，已将cacti-0.8.8h，rrdtool-1.4.9，spine-0.8.8h搭建
    
 2. 自动将中文Microsoft Yahoo字体添加到centos系统，默认情况下rrdtool和cacti均支持中文
    
 3. 可自定义的rrdtool水印变量，可以在变量RRDTOOL_LOGO中进行修改
    
-4. 自动添加图形导出脚本，以每天和每天根据日期自动导出图形树中的所有图形和数据。导出数据保存在/var/www/export目录中
+4. 添加图形导出脚本，以每天和每月根据日期自动导出图形树中的所有图形和数据。导出数据保存在/var/www/export目录中
    
-5. 自动添加数据备份脚本，备份数据保存在/var/www/backup目录中,备份文件自动删除3天前的备份文件以节约空间
+5. 添加数据备份脚本，备份数据保存在/var/www/backup目录中,备份文件自动删除3天前的备份文件以节约空间
    
-6. 在cacti-0.8.8h下添加了插件的一部分，包括Realtime, Clog, Syslog, Monitor, Nectar, Thold, Watermark, Settings, Cycle等
+6. 添加了部分cacti插件，包括Realtime, Clog, Syslog, Monitor, Nectar, Thold, Watermark, Settings, Cycle等
  
 8. 更改了graph_xport.php文件的编码，以解决中文标题图形导出数据的乱码问题
    
 9.  修复了一些常用设置，如默认勾选 Structured RRA Path
     
-10. 修改Base_value的值（1000或1024），可以将base_value中设置诸如1024反馈到图形中
+10. 修改Base_value的值（1000或1024），可以将base_value中设置诸如1024反馈到图形的95线中
     
 11. Thold插件集成了企业微信报警功能，您只需在设置中设置相关的ID和密码即可使用。具体设置方法请自行查询
     
