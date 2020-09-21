@@ -6,6 +6,12 @@
 ##### Github Repo: https://github.com/babyfenei/docker-cacti
 ##### Dockerhub Repo: https://hub.docker.com/r/babyfenei/cacti-0.8.8h/
 
+---
+
+[README](README.md) | [中文文档](README_ZH.md)
+
+---
+
 ## Features
 1. This docker is based on centos 6.8 version, installed cacti-0.8.8h, rrdtool-1.4.9, spine-0.8.8h to the system
 
