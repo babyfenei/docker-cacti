@@ -7,7 +7,7 @@
 ##### Dockerhub Repo: https://hub.docker.com/r/babyfenei/cacti-0.8.8h/
 
 ## Features
-1. This docker is based on centos 6.8 version, installed cacti0.8.8h, rrdtool1.4.9, spine0.8.8h to the system
+1. This docker is based on centos 6.8 version, installed cacti-0.8.8h, rrdtool-1.4.9, spine-0.8.8h to the system
 
 2. Automatically add Chinese Microsoft Yahoo font to centos system, rrdtool and cacti support Chinese by default
 
@@ -17,7 +17,7 @@
 
 5. Automatically add data backup script, backup data is saved in /var/www/backup directory
 
-6. Added part of the plugin under cacti0.8.8h,including Realtime, Clog, Syslog, Monitor, Nectar, Thold, Watermark, Settings, Cycle, etc.
+6. Added part of the plugin under cacti-0.8.8h,including Realtime, Clog, Syslog, Monitor, Nectar, Thold, Watermark, Settings, Cycle, etc.
 
 7. The graph_xport.php file encoding has been changed to solve the garbled problem of the Chinese header graphic export data.
 
@@ -27,16 +27,16 @@
 
 10. Thold plug-in has integrated the enterprise WeChat alarm function, you only need to set the relevant ID and secret in the settings to use. Please set your own WeChat specific setting method.
 
+11. Fix timestamp bug,timestamp greater than or equal to 1600000000 cann't zoom for graph and graph_export.
+
+
 ---
 
 ## Using this image
 ### docker-compose
 ```
- wget --no-check-certificate  https://raw.githubusercontent.com/babyfenei/docker-cacti/master/docker-compose.yml
- ```
- ```
- docker-compose up -d
- ```
+ wget --no-check-certificate  https://raw.githubusercontent.com/babyfenei/docker-cacti/master/docker-compose.yml &&  docker-compose up -d
+```
 
 
 ### Running the container
