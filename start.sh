@@ -169,9 +169,6 @@ echo "$(date +%F_%R) [New Install] Creating lock file, db setup complete."
 
 
 pkill httpd
-pkill crond
-pkill snmpd
-pkill rsyslogd
 rm -rf /var/run/httpd/*
 
 # start cron service

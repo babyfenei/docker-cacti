@@ -3,7 +3,7 @@
 cd /var/www/
 mkdir -p /var/www/backups
 # Remove old backups
-find /var/www/backups/* -mtime +7 -exec rm -fr {} \; > /dev/null 2>&1
+find /var/www/backups/* -mtime +3 -exec rm -fr {} \; > /dev/null 2>&1
 
 
 # Create the filename for the backup
